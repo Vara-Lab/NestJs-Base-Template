@@ -11,7 +11,6 @@ export class KeyringController {
     @UseGuards(JwtGuard)
     @Get(':address')
     async getWalletData(@Param('address') address: HexString) {
-        console.log('smna si paso a obtener la info');
         return await this.keyringService.keyringDataByAddress(address);
     }
 }

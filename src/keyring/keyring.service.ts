@@ -127,9 +127,6 @@ export class KeyringService {
                 ]
             });
 
-            console.log('Keyring account data: ');
-            console.log(response);
-
             const voucherId = (await sailsCallsInstance.vouchersInContract(keyringAddress))[0];
             const voucherBalance = await sailsCallsInstance.voucherBalance(voucherId);
 

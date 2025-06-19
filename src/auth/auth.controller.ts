@@ -16,20 +16,17 @@ export class AuthController {
 
   @Post('register')
   async registerUser(@Body() dto: CreateKeyringDto) {
-    console.log('se a registrado!');
     return await this.keyringService.createKeyring(dto);
   }
 
   @Post('login')
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
-    console.log('a iniciado sesion!');
     return await this.authService.login(dto, res);
   }
 
   @UseGuards(RefreshJwtGuard)
   @Post('refresh')
   async refreshToken(@Request() req, @Res({ passthrough: true }) res: Response) {
-    console.log('A refrescado!');
     return await this.authService.refreshToken(req.user, res);
   }
 }
