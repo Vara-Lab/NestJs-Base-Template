@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateKeyringDto } from './dto/create-keyring.dto';
 import { SailscallsService } from '../SailscallsService/sailscallsClient.service';
-import { VoucherService } from 'src/Voucher/voucher.service';
+import { VoucherService } from '../Voucher/voucher.service';
 import { decodeAddress, type HexString } from '@gear-js/api';
 import type { IFormatedKeyring } from 'sailscalls';
 import type { KeyringPair } from '@polkadot/keyring/types';
@@ -38,11 +38,11 @@ export class KeyringService {
         let keyringVoucherId = '';
 
         try {
-            const { voucherId } = await this.voucherService.createVoucher({
-                userAddress: decodeAddress(newKeyringPair.address)
-            })
+            // const { voucherId } = await this.voucherService.createVoucher({
+            //     userAddress: decodeAddress(newKeyringPair.address)
+            // })
 
-            keyringVoucherId = voucherId;
+            keyringVoucherId = "0x000000000000000";
         } catch(e) {
             console.log('Error while issue a voucher to a singless account!');
             console.log(e);

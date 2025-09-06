@@ -5,6 +5,8 @@ import { KeyringService } from '../keyring/keyring.service';
 import { SailscallsService } from '../SailscallsService/sailscallsClient.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { VoucherService } from '../Voucher/voucher.service';
+import { VouchersWorkerService } from '../VouchersWorkerService/vouchers_worker.service';
 import googleOauthConfig from './config/google-auth.config';
 
 @Module({
@@ -17,6 +19,8 @@ import googleOauthConfig from './config/google-auth.config';
     JwtService, 
     KeyringService,
     SailscallsService,
+    VoucherService,
+    VouchersWorkerService
   ],
 })
 export class AuthModule {}

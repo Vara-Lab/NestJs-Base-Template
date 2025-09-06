@@ -13,14 +13,11 @@ import {
 } from "../consts";
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { SailsCalls } from 'sailscalls';
-import { VoucherService } from "../Voucher/voucher.service";  
 
 @Injectable()
 export class SailscallsService implements OnModuleInit, OnModuleDestroy {
     private sailsCalls: SailsCalls;
     private reconnectAPI = true;
-
-    constructor(private voucherService: VoucherService) {}
 
     get sailsInstance() {
         return this.sailsCalls;
@@ -32,29 +29,6 @@ export class SailscallsService implements OnModuleInit, OnModuleDestroy {
 
     query() {
         return this.sailsCalls.query;
-    }
-
-    async createVoucher(userAddress: HexString): Promise<HexString> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const { voucherId } = await this.voucherService.createVoucher({
-                    userAddress
-                });
-
-                resolve(voucherId);
-            } catch(e) {
-                reject(e);
-            }
-        });
-    }
-
-    async checkVoucher(userAddress: HexString, voucherId: HexString) {
-        const result = await this.voucherService.updateVoucher({
-            userAddress,
-            voucherId
-        });
-
-        return result;
     }
 
     async onModuleInit() {

@@ -80,47 +80,6 @@ describe('SailscallsService (unit con mocks)', () => {
     expect(service.sailsInstance).toBe(sailsCallsMock as any);
   });
 
-  it('createVoucher - set and return voucherId', async () => {
-    sailsCallsMock.createVoucher.mockResolvedValue('0xVOUCHER');
-
-    const voucherId = await service.createVoucher('0xUSER' as any);
-
-    expect(sailsCallsMock.createVoucher).toHaveBeenCalledWith({
-      userAddress: '0xUSER',
-      initialTokensInVoucher: 3, 
-      initialExpiredTimeInBlocks: 1_200,
-    });
-    expect(voucherId).toBe('0xVOUCHER');
-  });
-
-  it('checkVoucher - renew and add tokens to the voucher', async () => {
-    sailsCallsMock.voucherIsExpired.mockResolvedValue(true);
-    sailsCallsMock.voucherBalance.mockResolvedValue(0);
-
-    await service.checkVoucher('0xUSER' as any, '0xVOUCHER' as any);
-
-    expect(sailsCallsMock.renewVoucherAmountOfBlocks).toHaveBeenCalledWith({
-      userAddress: '0xUSER',
-      voucherId: '0xVOUCHER',
-      numOfBlocks: 1_200,
-    });
-    expect(sailsCallsMock.addTokensToVoucher).toHaveBeenCalledWith({
-      userAddress: '0xUSER',
-      voucherId: '0xVOUCHER',
-      numOfTokens: 2, 
-    });
-  });
-
-  it('checkVoucher - voucher is updated', async () => {
-    sailsCallsMock.voucherIsExpired.mockResolvedValue(false);
-    sailsCallsMock.voucherBalance.mockResolvedValue(5);
-
-    await service.checkVoucher('0xUSER' as any, '0xVOUCHER' as any);
-
-    expect(sailsCallsMock.renewVoucherAmountOfBlocks).not.toHaveBeenCalled();
-    expect(sailsCallsMock.addTokensToVoucher).not.toHaveBeenCalled();
-  });
-
   it('onModuleDestroy - disconnect gear api', async () => {
     await service.onModuleDestroy();
     expect(sailsCallsMock.disconnectGearApi).toHaveBeenCalled();
