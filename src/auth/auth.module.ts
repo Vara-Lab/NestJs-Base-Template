@@ -16,7 +16,7 @@ import googleOauthConfig from './config/google-auth.config';
     AuthService, 
     JwtService, 
     KeyringService,
-    SailscallsService
+    SailscallsService,
   ],
 })
 export class AuthModule {}

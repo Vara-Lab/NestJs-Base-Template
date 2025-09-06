@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { KeyringService } from './keyring.service';
 import { JwtGuard } from '../auth/guards/jwt.guard';
-// import { QueryWard } from 'src/auth/guards/query.guard';
 import { HexString } from '@gear-js/api';
 
 @Controller('keyring')

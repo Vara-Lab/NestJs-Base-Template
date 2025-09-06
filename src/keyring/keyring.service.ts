@@ -2,6 +2,7 @@ import { ConflictException, Injectable, InternalServerErrorException, Unauthoriz
 import { CreateKeyringDto } from './dto/create-keyring.dto';
 import { SailscallsService } from '../SailscallsService/sailscallsClient.service';
 import { decodeAddress, type HexString } from '@gear-js/api';
+import { VouchersWorkerService } from '../VouchersWorkerService/vouchers_worker.service';
 import { 
     INITIAL_VOUCHER_EXPIRATION_TIME_IN_BLOCKS, 
     INITIAL_TOKENS_FOR_VOUCHER 
@@ -12,7 +13,10 @@ import * as CryptoJs from 'crypto-js';
 
 @Injectable()
 export class KeyringService {
-    constructor(private sailsService: SailscallsService) {}
+    constructor(
+        private sailsService: SailscallsService,
+        private vwService: VouchersWorkerService
+    ) {}
 
     async createKeyring(keyringData: CreateKeyringDto) {
         const { username, password } = keyringData;
@@ -38,16 +42,12 @@ export class KeyringService {
         let keyringVoucherId = '';
 
         try {
-            keyringVoucherId = await sailsInstance.createVoucher({
+            keyringVoucherId = await this.vwService.addVoucherRequest({
                 userAddress: decodeAddress(newKeyringPair.address),
-                initialExpiredTimeInBlocks: INITIAL_VOUCHER_EXPIRATION_TIME_IN_BLOCKS,
-                initialTokensInVoucher: INITIAL_TOKENS_FOR_VOUCHER,
-                callbacks: {
-                    onLoad() { console.log('Issue voucher to keyring account...') },
-                    onSuccess() { console.log('Voucher created for keyring account!') },
-                    onError() { console.log('Error while issue voucher to keyring') }
-                }
-            });
+                createVoucher: true,
+                addTokens: false,
+                renewVoucher: false
+            })
         } catch(e) {
             console.log('Error while issue a voucher to a singless account!');
             console.log(e);
