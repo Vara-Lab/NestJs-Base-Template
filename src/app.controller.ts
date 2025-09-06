@@ -1,15 +1,9 @@
-import { 
-  Controller, 
-  Post, 
-  Body 
-} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class AppController {
-  @Post('/')
-  receiveHello(@Body() data: any): string {
-    return 'Hello!';
+  @Get()
+  getHello(): string {
+    return "Hello world!";
   }
 }
-
-
