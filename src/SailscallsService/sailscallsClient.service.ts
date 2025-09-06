@@ -13,11 +13,14 @@ import {
 } from "../consts";
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { SailsCalls } from 'sailscalls';
+import { VoucherService } from "../Voucher/voucher.service";  
 
 @Injectable()
 export class SailscallsService implements OnModuleInit, OnModuleDestroy {
     private sailsCalls: SailsCalls;
     private reconnectAPI = true;
+
+    constructor(private voucherService: VoucherService) {}
 
     get sailsInstance() {
         return this.sailsCalls;
@@ -34,11 +37,10 @@ export class SailscallsService implements OnModuleInit, OnModuleDestroy {
     async createVoucher(userAddress: HexString): Promise<HexString> {
         return new Promise(async (resolve, reject) => {
             try {
-                const voucherId = await this.sailsCalls.createVoucher({
-                    userAddress,
-                    initialTokensInVoucher: INITIAL_TOKENS_FOR_VOUCHER,
-                    initialExpiredTimeInBlocks: INITIAL_VOUCHER_EXPIRATION_TIME_IN_BLOCKS
+                const { voucherId } = await this.voucherService.createVoucher({
+                    userAddress
                 });
+
                 resolve(voucherId);
             } catch(e) {
                 reject(e);
@@ -47,28 +49,12 @@ export class SailscallsService implements OnModuleInit, OnModuleDestroy {
     }
 
     async checkVoucher(userAddress: HexString, voucherId: HexString) {
-        const voucherIsExpired = await this.sailsCalls.voucherIsExpired(
+        const result = await this.voucherService.updateVoucher({
             userAddress,
-            voucherId,
-        );
+            voucherId
+        });
 
-        if (voucherIsExpired) {
-            await this.sailsCalls.renewVoucherAmountOfBlocks({
-                userAddress,
-                voucherId,
-                numOfBlocks: NEW_VOUCHER_EXPIRATION_TIME_IN_BLOCKS
-            });
-        }
-
-        const voucherBalance = await this.sailsCalls.voucherBalance(voucherId);
-
-        if (voucherBalance < MIN_TOKENS_FOR_VOUCHER) {
-            await this.sailsCalls.addTokensToVoucher({
-                userAddress,
-                voucherId,
-                numOfTokens: TOKENS_TO_ADD_TO_VOUCHER
-            });
-        }
+        return result;
     }
 
     async onModuleInit() {

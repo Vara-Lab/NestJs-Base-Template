@@ -1,12 +1,8 @@
 import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateKeyringDto } from './dto/create-keyring.dto';
 import { SailscallsService } from '../SailscallsService/sailscallsClient.service';
+import { VoucherService } from 'src/Voucher/voucher.service';
 import { decodeAddress, type HexString } from '@gear-js/api';
-import { VouchersWorkerService } from '../VouchersWorkerService/vouchers_worker.service';
-import { 
-    INITIAL_VOUCHER_EXPIRATION_TIME_IN_BLOCKS, 
-    INITIAL_TOKENS_FOR_VOUCHER 
-} from '../consts';
 import type { IFormatedKeyring } from 'sailscalls';
 import type { KeyringPair } from '@polkadot/keyring/types';
 import * as CryptoJs from 'crypto-js';
@@ -15,7 +11,7 @@ import * as CryptoJs from 'crypto-js';
 export class KeyringService {
     constructor(
         private sailsService: SailscallsService,
-        private vwService: VouchersWorkerService
+        private voucherService: VoucherService
     ) {}
 
     async createKeyring(keyringData: CreateKeyringDto) {
@@ -42,12 +38,11 @@ export class KeyringService {
         let keyringVoucherId = '';
 
         try {
-            keyringVoucherId = await this.vwService.addVoucherRequest({
-                userAddress: decodeAddress(newKeyringPair.address),
-                createVoucher: true,
-                addTokens: false,
-                renewVoucher: false
+            const { voucherId } = await this.voucherService.createVoucher({
+                userAddress: decodeAddress(newKeyringPair.address)
             })
+
+            keyringVoucherId = voucherId;
         } catch(e) {
             console.log('Error while issue a voucher to a singless account!');
             console.log(e);
@@ -145,7 +140,6 @@ export class KeyringService {
     encryptString(text: string): string {
         const encryptedText = CryptoJs.SHA256(text).toString();
         return encryptedText;
-        // return CryptoJs.SHA256(text).toString(); 
     }
 
     private async registerKeyringPair(
