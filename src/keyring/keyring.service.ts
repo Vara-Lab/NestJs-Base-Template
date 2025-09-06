@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateKeyringDto } from './dto/create-keyring.dto';
-import { SailscallsService } from 'src/sailscallsClientService/sailscallsClient.service';
+import { SailscallsService } from '../sailscallsClientService/sailscallsClient.service';
 import { decodeAddress, type HexString } from '@gear-js/api';
 import { 
     INITIAL_BLOCKS_FOR_VOUCHER, 

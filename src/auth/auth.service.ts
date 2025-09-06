@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/auth.dto';
-import { KeyringService } from 'src/keyring/keyring.service';
+import { KeyringService } from '../keyring/keyring.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 
