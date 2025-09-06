@@ -28,12 +28,12 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '15m',
-      secret: process.env.jwtSecretKey,
+      secret: process.env.JWT_SECRET_KEY,
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: '7d',
-      secret: process.env.jwtRefreshTokenKey,
+      secret: process.env.JWT_REFRESH_TOKEN_KEY,
     });
 
     const expiresIn = new Date().setTime(new Date().getTime() + EXPIRE_TIME);
@@ -86,12 +86,12 @@ export class AuthService {
 
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '15m',
-      secret: process.env.jwtSecretKey,
+      secret: process.env.JWT_SECRET_KEY,
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
       expiresIn: '7d',
-      secret: process.env.jwtRefreshTokenKey,
+      secret: process.env.JWT_REFRESH_TOKEN_KEY,
     });
 
 
