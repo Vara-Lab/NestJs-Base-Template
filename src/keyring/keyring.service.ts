@@ -1,11 +1,11 @@
 import { ConflictException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateKeyringDto } from './dto/create-keyring.dto';
-import { SailscallsService } from '../sailscallsClientService/sailscallsClient.service';
+import { SailscallsService } from '../SailscallsService/sailscallsClient.service';
 import { decodeAddress, type HexString } from '@gear-js/api';
 import { 
-    INITIAL_BLOCKS_FOR_VOUCHER, 
-    INITIAL_VOUCHER_TOKENS 
-} from 'src/consts';
+    INITIAL_VOUCHER_EXPIRATION_TIME_IN_BLOCKS, 
+    INITIAL_TOKENS_FOR_VOUCHER 
+} from '../consts';
 import type { IFormatedKeyring } from 'sailscalls';
 import type { KeyringPair } from '@polkadot/keyring/types';
 import * as CryptoJs from 'crypto-js';
@@ -26,7 +26,7 @@ export class KeyringService {
             throw new ConflictException('username already exists');
         }
 
-        const sailsInstance = this.sailsService.sailsInstance();
+        const sailsInstance = this.sailsService.sailsInstance;
 
         const newKeyringPair = await sailsInstance.createNewKeyringPair(username);
         const lockedKeyringPair = sailsInstance.lockkeyringPair(
@@ -40,8 +40,8 @@ export class KeyringService {
         try {
             keyringVoucherId = await sailsInstance.createVoucher({
                 userAddress: decodeAddress(newKeyringPair.address),
-                initialExpiredTimeInBlocks: INITIAL_BLOCKS_FOR_VOUCHER,
-                initialTokensInVoucher: INITIAL_VOUCHER_TOKENS,
+                initialExpiredTimeInBlocks: INITIAL_VOUCHER_EXPIRATION_TIME_IN_BLOCKS,
+                initialTokensInVoucher: INITIAL_TOKENS_FOR_VOUCHER,
                 callbacks: {
                     onLoad() { console.log('Issue voucher to keyring account...') },
                     onSuccess() { console.log('Voucher created for keyring account!') },
@@ -84,7 +84,7 @@ export class KeyringService {
         username: string, 
         password: string
     ) {
-        const sailsCallsInstance = this.sailsService.sailsInstance();
+        const sailsCallsInstance = this.sailsService.sailsInstance;
         const keyringData = await this.keyringDataByAddress(keyringAddress);
         const hashedPassword = this.encryptString(password);
 
@@ -116,7 +116,7 @@ export class KeyringService {
     }
 
     async keyringDataByAddress(keyringAddress: HexString) {
-        const sailsCallsInstance = this.sailsService.sailsInstance();
+        const sailsCallsInstance = this.sailsService.sailsInstance;
 
         try {
             const response = await sailsCallsInstance.query({
