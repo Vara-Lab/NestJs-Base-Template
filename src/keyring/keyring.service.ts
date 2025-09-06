@@ -38,11 +38,11 @@ export class KeyringService {
         let keyringVoucherId = '';
 
         try {
-            // const { voucherId } = await this.voucherService.createVoucher({
-            //     userAddress: decodeAddress(newKeyringPair.address)
-            // })
+            const { voucherId } = await this.voucherService.createVoucher({
+                userAddress: decodeAddress(newKeyringPair.address)
+            })
 
-            keyringVoucherId = "0x000000000000000";
+            keyringVoucherId = voucherId;
         } catch(e) {
             console.log('Error while issue a voucher to a singless account!');
             console.log(e);
