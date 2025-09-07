@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const ONE_TOKEN = 1e12;
+export const NODE_ENV = process.env.NODE_ENV;
+export const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+export const JWT_REFRESH_TOKEN_KEY = process.env.JWT_REFRESH_TOKEN_KEY;
 export const NETWORK = process.env.NETWORK;
 export const PORT = process.env.PORT;
 export const SPONSOR_NAME = process.env.SPONSOR_NAME;
